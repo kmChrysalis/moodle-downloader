@@ -1,76 +1,72 @@
 <meta charset="UTF-8">
 <!doctype html>
-<html>
-    <head>
-        <title>moodleDownloader</title>
-        <link rel="stylesheet"  type="text/css" href="../css/style.css">
-        <link rel="stylesheet" href="../css/material.min.css">
-        <script src="../css/material.min.js"></script>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <script src="./popup.js"></script>
-    </head>
-    <body>
-      <!-- <style>
-        .demo-card-wide.mdl-card {
-          background: rgb(231, 242, 255);
-        }
-      </style> -->
+<html lang="">
+<head>
+		<title>moodleDownloader</title>
+		<link href="../css/style.css" rel="stylesheet" type="text/css">
+		<link href="../css/material.min.css" rel="stylesheet">
+		<link href="../css/popup.css" rel="stylesheet">
+		<script src="../css/material.min.js"></script>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script src="./popup.js"></script>
+</head>
 
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+		<div class="mdl-card__title">
+				<h2 class="mdl-card__title-text">moodleDownloader 📚</h2>
+		</div>
 
-      <div class="demo-card-wide mdl-card mdl-shadow--2dp">
-        <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text">moodleDownloader 📚</h2>
+		<div class="mdl-card__actions mdl-card--border">
+
+				<small id="hint_1">Click and drag or use ⌘ key to select multiple options:</small>
+				<div class="mdl-textfield mdl-js-textfield" id="search_bar">
+						<input class="mdl-textfield__input" id="search" type="text">
+						<label class="mdl-textfield__label" for="search" id="search_label">search... (regex supported)</label>
 				</div>
+				<label for="resourceSelector"></label>
+				<select class="mdl-textfield__input" id="resourceSelector" multiple>
+				</select>
+				<br>
+				<div id="footer">
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="organize">
+								<input checked class="mdl-checkbox__input" id="organize" type="checkbox">
+								<span class="mdl-checkbox__label" id="checkbox_label_1">Organize into folder (experimental)</span>
+						</label>
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="replaceFilename">
+								<input class="mdl-checkbox__input" id="replaceFilename" type="checkbox">
+								<span class="mdl-checkbox__label" id="checkbox_label_2">Replace filename with Moodle name</span>
+						</label>
+						<br>
+						<br>
+						<span id="hint_2">Hint: ctrl+A and download all files at once!</span>
+						<br>
+						<br>
 
-        <div class="mdl-card__actions mdl-card--border">
-
-          <small style="font-size:75%; padding-left: 1%;">Click and drag or use ⌘ key to select multiple options:</small>
-					<div style="padding-left: 1%">
-							<div class="mdl-textfield mdl-js-textfield">
-								<input style="font-size:75%;" class="mdl-textfield__input" type="text" id="search">
-								<label style="font-size:75%;" class="mdl-textfield__label" for="search">search... (regex supported)</label>
-							</div>
-					</div>
-					<select multiple class="mdl-textfield__input" id="resourceSelector">
-          </select>
-					<br>
-					<div style="padding-left: 1%;" id=footer>
-						<div style="zoom: .9">
-							<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="organize">
-								<input type="checkbox" id="organize" class="mdl-checkbox__input" checked>
-								<span style="font-size:75%;" class="mdl-checkbox__label">Organize into folder (experimental)</span>
-							</label>
-							<label for="resourcesSection" >
-								<br>
-								<!-- <br> -->
-								<span style="font-size:75%;">Hint: Head to the Resouces to download all resources at once!</span>
-								<!-- <br> -->
-							</label>
-							<br>
-							<br>
-							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="downloadResources">Download</button>
-							<a href="">
-								<div id="shareLink" class="icon material-icons">share</div>
-							</a>
-							<div style="display: inline;">
-								<a id="sourceCode" href="https://github.com/harsilspatel/moodleDownloader">
-									<img src="../assets/github120.png" alt="Souce code"  align="right" style="width: 9%; padding-right: 2%;">
+						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
+										id="downloadResources">Download
+						</button>
+						<a href="">
+								<div class="icon material-icons" id="shareLink">share</div>
+						</a>
+						<div id="github">
+								<a href="https://github.com/harsilspatel/moodleDownloader" id="sourceCode">
+										<img alt="Source code" id="git-img" src="../assets/github120.png">
 								</a>
-							</div>
 						</div>
 
-						<div hidden='hidden' id=feedbackDiv>
+						<div hidden='hidden' id="feedbackDiv">
 								<br>
-								<small id=feedbackPrompt>You just downloaded 50th file using this tool! 🎉 <br/> <br/> I have spent more than <b>30 hours</b> to learn & develop this extension, could you please rate my efforts? 😬</small>
-								<button class="mdl-button mdl-js-button mdl-button--accent" id=sure>
+								<small id="feedbackPrompt">You just downloaded 50th file using this tool! 🎉 <br/>
+										<br/> I have spent more than <b>30 hours</b> to learn & develop this extension, could you please
+										rate my efforts? 😬</small>
+								<button class="mdl-button mdl-js-button mdl-button--accent" id="sure">
 										Sure! 😎
-									</button>
-								<button style='position:absolute; right: 5%;' class="mdl-button mdl-js-button mdl-button--primary" id=nah>
+								</button>
+								<button class="mdl-button mdl-js-button mdl-button--primary" id="nah">
 										Nah! 😒
-									</button>
+								</button>
 						</div>
-					</div>
-        </div>
-			</div>
-    </body>
+				</div>
+		</div>
+</div>
 </html>

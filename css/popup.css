@@ -1,0 +1,53 @@
+#hint_1{
+	font-size:75%;
+	padding-left: 1%;
+}
+
+#search_bar{
+	padding-left: 1%
+}
+
+#search{
+	font-size:75%;
+}
+
+#search_label{
+	font-size:75%;
+}
+
+#resourceSelector{
+	text-align: right;
+}
+
+#footer{
+	padding-left: 1%;
+}
+
+#checkbox_label_1{
+	font-size:75%;
+}
+
+#checkbox_label_2{
+	font-size:75%;
+}
+
+#hint_2{
+	font-size:75%;
+}
+
+#github{
+	display: inline;
+}
+
+#git-img{
+	float: right;
+	width: 9%;
+	padding-right: 2%;
+}
+
+#nah{
+	position:absolute;
+	right: 5%;
+}
+/*
+#sourceCode{alignment: right; child-align: right; text-align: right; horiz-align: right}*/

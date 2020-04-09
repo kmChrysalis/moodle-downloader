@@ -67,7 +67,16 @@
       "contributions": [
         "bug"
       ]
-    }
+    },
+    {
+          "login": "kmChrysalis",
+          "name": "Konstantin Maltcev",
+          "avatar_url": "https://avatars0.githubusercontent.com/u/49153974?v=4",
+          "profile": "https://github.com/kmChrysalis",
+          "contributions": [
+            "bug", "Braude adapt"
+          ]
+        }
   ],
   "contributorsPerLine": 7,
   "projectName": "MoodleDownloader",
