@@ -35,7 +35,7 @@ Install the latest version of MoodleDownloader from the chrome web store
 There are dozens of apps/scripts for downloading moodle resources out there, however, none of them are operable by a non-IT student. For instance, an average art student doesn't know (or doesn't even care) how to execute terminal commands to get those moodle files, therefore I decided to create an average-user-friendly tool! Additionally, this is my exercise in both improving my javascript and better understand how google analytics and chrome apis work (mostly the latter!)
 
 ## Usage 🖱
-1. Login in to your moodle (for example https://moodle.vle.monash.edu)
+1. Login in to your moodle (for example https://moodle.braude.ac.il/)
 2. Open the week (section) from where you would like to download the resources from
 3. Click on the extension icon and select the resources to be downloaded.
     - Click and drag or use ⌘ key to select multiple options:
