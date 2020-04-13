@@ -45,21 +45,16 @@ function getFilesUnderSection(sesskey, SUPPORTED_FILES) {
 			const section = cleanupSection(sectionEl.textContent.trim());
 			return Array.from(content.getElementsByClassName("activity"))
 				.map(activity => ({
-					instanceName: activity.getElementsByClassName(
-						"instancename"
-					)[0],
-					archorTag: activity.getElementsByTagName("a")[0]
+					instanceName: activity.getElementsByClassName("instancename")[0],
+					anchorTag: activity.getElementsByTagName("a")[0]
 				}))
 				.filter(
-					({ instanceName, archorTag }) =>
-						instanceName !== undefined && archorTag !== undefined
+					({instanceName, anchorTag}) =>
+						instanceName !== undefined && anchorTag !== undefined
 				)
-				.map(({ instanceName, archorTag }) => ({
+				.map(({instanceName, anchorTag}) => ({
 					name: instanceName.firstChild.textContent.trim(),
-					downloadOptions: getDownloadOptions(
-						sesskey,
-						archorTag.href
-					),
+					downloadOptions: getDownloadOptions(sesskey, anchorTag.href),
 					type: instanceName.lastChild.textContent.trim(),
 					section: section
 				}))
@@ -75,17 +70,10 @@ function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES) {
 		.map(
 			resource =>
 				(resource = {
-					name: resource
-						.getElementsByTagName("a")[0]
-						.textContent.trim(),
-					downloadOptions: getDownloadOptions(
-						sesskey,
-						resource.getElementsByTagName("a")[0].href
-					),
+					name: resource.getElementsByTagName("a")[0].textContent.trim(),
+					downloadOptions: getDownloadOptions(sesskey, resource.getElementsByTagName("a")[0].href),
 					type: resource.getElementsByTagName("img")[0]["alt"].trim(),
-					section: resource
-						.getElementsByTagName("td")[0]
-						.textContent.trim()
+					section: resource.getElementsByTagName("td")[0].textContent.trim()
 				})
 		)
 		.map((resource, index, array) => {
@@ -117,6 +105,7 @@ function getFiles() {
 		"div[role='main'] > table.generaltable.mod_index > tbody"
 	);
 	const SUPPORTED_FILES = new Set(["File", "Folder", "URL", "Page", "קובץ"]);
+
 	const allFiles =
 		tableBody === null
 			? getFilesUnderSection(sesskey, SUPPORTED_FILES)

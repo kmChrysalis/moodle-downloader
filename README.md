@@ -90,7 +90,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://mcpower.me"><img src="https://avatars1.githubusercontent.com/u/6015058?v=4" width="100px;" alt=""/><br /><sub><b>mcpower</b></sub></a><br /><a href="#ideas-mcpower" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/harsilspatel/moodle-downloader/commits?author=mcpower" title="Code">💻</a> <a href="https://github.com/harsilspatel/moodle-downloader/commits?author=mcpower" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/kmChrysalis"><img src="https://avatars0.githubusercontent.com/u/49153974?v=4" width="100px;" alt=""/><br /><sub><b>kmChrysalis</b></sub></a><br /><a href="https://github.com/harsilspatel/moodle-downloader/issues?q=author%3AkmChrysalis" title="Bug reports">🐛</a>
   </tr>
 </table>
 

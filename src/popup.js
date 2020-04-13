@@ -6,6 +6,32 @@
 let resourcesList = [];
 
 function main() {
+	// google analytics
+	(function(i, s, o, g, r, a, m) {
+		i["GoogleAnalyticsObject"] = r;
+		// noinspection CommaExpressionJS
+		(i[r] =
+			i[r] ||
+			function() {
+				(i[r].q = i[r].q || []).push(arguments);
+			}),
+			(i[r].l = 1 * new Date());
+		(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m);
+	})(
+		window,
+		document,
+		"script",
+		"https://www.google-analytics.com/analytics.js",
+		"ga"
+	);
+
+	ga("create", "UA-119398707-1", "auto");
+	ga("set", "checkProtocolTask", null);
+	ga("send", "pageview");
+
 	// downloadResources on button press
 	const button = document.getElementById("downloadResources");
 	button.addEventListener("click", () => {
@@ -15,7 +41,7 @@ function main() {
 	document.getElementById("shareLink").addEventListener("click", () => {
 		let copyFrom = document.createElement("textarea");
 		copyFrom.textContent =
-			"https://chrome.google.com/webstore/detail/geckodm/pgkfjobhhfckamidemkddfnnkknomobe";
+			"https://github.com/kmChrysalis/moodle-downloader/releases";
 		document.body.appendChild(copyFrom);
 		copyFrom.select();
 		document.execCommand("copy");
@@ -25,7 +51,7 @@ function main() {
 
 	document.getElementById("sourceCode").addEventListener("click", () => {
 		chrome.tabs.create({
-			url: "https:github.com/harsilspatel/moodleDownloader"
+			url: "https://github.com/kmChrysalis/moodle-downloader"
 		});
 	});
 
@@ -36,6 +62,7 @@ function main() {
 	});
 
 	// executing background.js to populate the select form
+
 	chrome.tabs.executeScript({ file: "./src/background.js" }, result => {
 		try {
 			const resourceSelector = document.getElementById(
@@ -111,7 +138,7 @@ function requestFeedback() {
 					feedbackDiv.setAttribute("hidden", "hidden");
 					chrome.tabs.create({
 						url:
-							"https://chrome.google.com/webstore/detail/moodle-downloader/ohhocacnnfaiphiahofcnfakdcfldbnh"
+							"https://github.com/kmChrysalis/moodle-downloader/releases"
 					});
 				}, 2000);
 			});
@@ -187,10 +214,11 @@ function downloadResources() {
 	const INTERVAL = 500;
 	const footer = document.getElementById("footer");
 	const button = document.getElementById("downloadResources");
+	const warning = document.getElementById("warning");
 	const resourceSelector = document.getElementById("resourceSelector");
 	const selectedOptions = Array.from(resourceSelector.selectedOptions);
 	organizeChecked = document.getElementById("organize").checked;
-	replaceFilename = document.getElementById("replaceFilename").checked;
+	//replaceFilename = document.getElementById("replaceFilename").checked;
 	const hasDownloadsListener = chrome.downloads.onDeterminingFilename.hasListener(
 		suggestFilename
 	);
@@ -201,17 +229,14 @@ function downloadResources() {
 
 	// hiding the button and showing warning text
 	button.setAttribute("hidden", "hidden");
-	const warning = document.createElement("small");
-	warning.style.color = "red";
-	warning.innerHTML = "Please keep this window open until selected resources are not downloaded...";
-	footer.appendChild(warning);
+	warning.removeAttribute("hidden");
 
 	// updating stats
 	updateDownloads(selectedOptions.length);
 
 	// showing the button and removing the text and requesting for feedback
 	setTimeout(() => {
-		footer.removeChild(warning);
+		warning.setAttribute("hidden", "hidden");
 		button.removeAttribute("hidden");
 		requestFeedback();
 	}, (selectedOptions.length + 4) * INTERVAL);
@@ -263,6 +288,12 @@ function downloadResources() {
 				chrome.downloads.download(resource.downloadOptions);
 			}, index * INTERVAL);
 		}
+	});
+
+	ga("send", "event", {
+		eventCategory: "click",
+		eventAction: "downloadResources",
+		eventValue: selectedOptions.length
 	});
 }
 
