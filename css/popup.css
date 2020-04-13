@@ -1,18 +1,39 @@
+#header {
+	background: #1177d1;
+	color: #ffffff;
+}
+
+#body {
+	height: auto !important;
+	min-height: min-content;
+	height: fit-content;
+	position: relative;
+	overflow: auto;
+}
+
 #hint_1{
 	font-size:75%;
 	padding-left: 1%;
 }
-
 #search_bar{
-	padding-left: 1%
+	top: 0;
+	height: 25px;
+	padding: 0;
 }
 
 #search{
+	border-bottom: 0;
+	padding-left: 10px;;
+	top: inherit;
+	height: inherit;
 	font-size:75%;
 }
 
 #search_label{
+	bottom: inherit;
+	top: 5px;
 	font-size:75%;
+	padding-left: 10px;
 }
 
 #resourceSelector{
@@ -31,8 +52,19 @@
 	font-size:75%;
 }
 
+#warning {
+	display: inline-block;
+	width: 250px;
+	margin-top: 5px;
+	font-size: 80%;
+	color: red;
+}
 #hint_2{
 	font-size:75%;
+}
+#downloadResources {
+	background: #1177d1;
+	color: #ffffff;
 }
 
 #github{
@@ -49,5 +81,3 @@
 	position:absolute;
 	right: 5%;
 }
-/*
-#sourceCode{alignment: right; child-align: right; text-align: right; horiz-align: right}*/
