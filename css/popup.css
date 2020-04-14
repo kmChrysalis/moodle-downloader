@@ -1,6 +1,11 @@
-#header {
+#header, #downloadResources {
 	background: #1177d1;
 	color: #ffffff;
+}
+
+#search, #search_label,
+#checkbox_label_1, #checkbox_label_2 {
+	font-size:75%;
 }
 
 #body {
@@ -11,73 +16,47 @@
 	overflow: auto;
 }
 
-#hint_1{
-	font-size:75%;
-	padding-left: 1%;
-}
 #search_bar{
 	top: 0;
 	height: 25px;
 	padding: 0;
 }
 
-#search{
+#search {
 	border-bottom: 0;
 	padding-left: 10px;;
 	top: inherit;
 	height: inherit;
-	font-size:75%;
 }
 
-#search_label{
+#search_label {
 	bottom: inherit;
 	top: 5px;
-	font-size:75%;
 	padding-left: 10px;
 }
 
 #resourceSelector{
-	text-align: right;
-}
-
-#footer{
-	padding-left: 1%;
-}
-
-#checkbox_label_1{
-	font-size:75%;
-}
-
-#checkbox_label_2{
-	font-size:75%;
+	direction: rtl;
 }
 
 #warning {
 	display: inline-block;
-	width: 250px;
+	width: 235px;
 	margin-top: 5px;
 	font-size: 80%;
 	color: red;
 }
-#hint_2{
-	font-size:75%;
-}
-#downloadResources {
-	background: #1177d1;
-	color: #ffffff;
-}
 
-#github{
+#github, #telegram {
 	display: inline;
-}
-
-#git-img{
+	width: 10%;
 	float: right;
-	width: 9%;
-	padding-right: 2%;
+	padding-top: 2px;
+	padding-right: 2px;
+	padding-left: 5px;
 }
 
-#nah{
-	position:absolute;
+#nah {
+	position: absolute;
 	right: 5%;
 }

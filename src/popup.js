@@ -4,52 +4,22 @@
  * https://github.com/harsilspatel/MoodleDownloader
  */
 let resourcesList = [];
+let isDownloadActive = false;
 
 function main() {
-	// google analytics
-	(function(i, s, o, g, r, a, m) {
-		i["GoogleAnalyticsObject"] = r;
-		// noinspection CommaExpressionJS
-		(i[r] =
-			i[r] ||
-			function() {
-				(i[r].q = i[r].q || []).push(arguments);
-			}),
-			(i[r].l = 1 * new Date());
-		(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-		a.async = 1;
-		a.src = g;
-		m.parentNode.insertBefore(a, m);
-	})(
-		window,
-		document,
-		"script",
-		"https://www.google-analytics.com/analytics.js",
-		"ga"
-	);
-
-	ga("create", "UA-119398707-1", "auto");
-	ga("set", "checkProtocolTask", null);
-	ga("send", "pageview");
-
 	// downloadResources on button press
 	const button = document.getElementById("downloadResources");
 	button.addEventListener("click", () => {
 		downloadResources();
 	});
 
-	document.getElementById("shareLink").addEventListener("click", () => {
-		let copyFrom = document.createElement("textarea");
-		copyFrom.textContent =
-			"https://github.com/kmChrysalis/moodle-downloader/releases";
-		document.body.appendChild(copyFrom);
-		copyFrom.select();
-		document.execCommand("copy");
-		copyFrom.blur();
-		document.body.removeChild(copyFrom);
+	document.getElementById("telegram").addEventListener("click", () => {
+		chrome.tabs.create({
+			url: "https://t.me/chrysal1s"
+		});
 	});
 
-	document.getElementById("sourceCode").addEventListener("click", () => {
+	document.getElementById("github").addEventListener("click", () => {
 		chrome.tabs.create({
 			url: "https://github.com/kmChrysalis/moodle-downloader"
 		});
@@ -105,9 +75,7 @@ function initStorage() {
 
 function requestFeedback() {
 	chrome.storage.sync.get(["downloads", "alreadyRequested"], result => {
-		console.log("inside requestFeedback");
 		if (result.downloads >= 50 && result.alreadyRequested === false) {
-			console.log("attaching ");
 			const nah = document.getElementById("nah");
 			const sure = document.getElementById("sure");
 			const feedbackDiv = document.getElementById("feedbackDiv");
@@ -120,8 +88,7 @@ function requestFeedback() {
 				});
 				nah.setAttribute("hidden", "hidden");
 				sure.setAttribute("hidden", "hidden");
-				feedbackPrompt.innerHTML =
-					"No problem, you have a good one! 😄";
+				feedbackPrompt.innerHTML = "No problem, you have a good one! 😄";
 				setTimeout(() => {
 					feedbackDiv.setAttribute("hidden", "hidden");
 				}, 2000);
@@ -137,8 +104,7 @@ function requestFeedback() {
 				setTimeout(() => {
 					feedbackDiv.setAttribute("hidden", "hidden");
 					chrome.tabs.create({
-						url:
-							"https://github.com/kmChrysalis/moodle-downloader/releases"
+						url: "https://github.com/kmChrysalis/moodle-downloader/releases"
 					});
 				}, 2000);
 			});
@@ -175,7 +141,7 @@ let organizeChecked = false;
 let replaceFilename = false;
 
 function sanitiseFilename(filename) {
-	return filename.replace(/[\\/:*?"<>|]/g, "-");
+	return filename.replace(/[\\/:*?"<>|]/g, " ");
 }
 
 function suggestFilename(downloadItem, suggest) {
@@ -212,20 +178,19 @@ function suggestFilename(downloadItem, suggest) {
 
 function downloadResources() {
 	const INTERVAL = 500;
-	const footer = document.getElementById("footer");
 	const button = document.getElementById("downloadResources");
 	const warning = document.getElementById("warning");
 	const resourceSelector = document.getElementById("resourceSelector");
 	const selectedOptions = Array.from(resourceSelector.selectedOptions);
 	organizeChecked = document.getElementById("organize").checked;
-	//replaceFilename = document.getElementById("replaceFilename").checked;
 	const hasDownloadsListener = chrome.downloads.onDeterminingFilename.hasListener(
 		suggestFilename
 	);
 
 	// add listener to organize files
-	if (!hasDownloadsListener)
+	if (!hasDownloadsListener) {
 		chrome.downloads.onDeterminingFilename.addListener(suggestFilename);
+	}
 
 	// hiding the button and showing warning text
 	button.setAttribute("hidden", "hidden");
@@ -289,12 +254,7 @@ function downloadResources() {
 			}, index * INTERVAL);
 		}
 	});
-
-	ga("send", "event", {
-		eventCategory: "click",
-		eventAction: "downloadResources",
-		eventValue: selectedOptions.length
-	});
+	isDownloadActive = false;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
