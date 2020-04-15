@@ -8,9 +8,7 @@ function getDownloadOptions(sesskey, url) {
 	if (!url.includes("folder")) {
 		// Resources, URLs, Pages.
 		// URLs and Pages need to be handled in popup.js.
-		return {
-			url: url + "&redirect=1"
-		};
+		return {url: url + "&redirect=1"};
 	}
 	const urlObj = new URL(url);
 	const id = urlObj.searchParams.get("id");
@@ -89,9 +87,9 @@ function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES) {
 function getFiles() {
 	const courseName = cleanupCourseName(
 		document.getElementsByTagName("h1")[0].innerText ||
-			document.getElementsByClassName("breadcrumb-item")[2].firstElementChild.title ||
-			document.querySelector("header#page-header .header-title").textContent.trim() ||
-			"");
+		document.getElementsByClassName("breadcrumb-item")[2].firstElementChild.title ||
+		document.querySelector("header#page-header .header-title").textContent.trim() ||
+		"");
 
 	// The session key should normally be accessible through window.M.cfg.sesskey,
 	// but getting the window object is hard.
@@ -106,10 +104,9 @@ function getFiles() {
 	);
 	const SUPPORTED_FILES = new Set(["File", "Folder", "URL", "Page", "קובץ"]);
 
-	const allFiles =
-		tableBody === null
-			? getFilesUnderSection(sesskey, SUPPORTED_FILES)
-			: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES);
+	const allFiles = tableBody === null
+		? getFilesUnderSection(sesskey, SUPPORTED_FILES)
+		: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES);
 	allFiles.forEach(file => (file.course = courseName));
 	console.log(allFiles);
 	return allFiles;
