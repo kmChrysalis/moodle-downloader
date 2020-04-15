@@ -24,7 +24,7 @@
 </p>
 <b>Everything has been taken as is, redesigned and adapted to Hebrew</b>
 
-If you prefer to install manually, the latest binaries can be found [here](https://github.com/harsilspatel/MoodleDownloader/releases/latest).
+If you prefer to install manually, the latest binaries can be found [here](https://github.com/kmChrysalis/moodle-downloader/releases/latest).
 
 Install the latest version of MoodleDownloader from the chrome web store
 
