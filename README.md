@@ -1,6 +1,6 @@
 
 <p align="center">
-  <a href="https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn">
+  <a href="https://chrome.google.com/webstore/detail/moodle-downloader/ohhocacnnfaiphiahofcnfakdcfldbnh">
     <img src="assets/icon512.png" width="20%" height="20%">
   </a>
 </p>
@@ -11,24 +11,25 @@
 
 <p align="center">
   <a href="#contributors">
-    <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square"/>
+    <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square" />
   </a>
-	<a href="https://github.com/kmChrysalis/moodle-downloader/blob/master/LICENSE.md">
-	<img alt="GitHub license" src="https://img.shields.io/github/license/kmChrysalis/moodle-downloader?logoColor=bright-green"></a>
+	<a href="https://github.com/harsilspatel/MoodleDownloader/blob/master/LICENSE.md">
+    <img alt="MIT license" src="https://img.shields.io/github/license/harsilspatel/moodleDownloader?color=brightgreen" />
   </a>
-  <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/rating/egdgajocnmpjhghpglffhngdojcinkhn">
+  <a href="https://img.shields.io/chrome-web-store/rating/ohhocacnnfaiphiahofcnfakdcfldbnh.svg?color=ff69b4">
+    <img src="https://img.shields.io/chrome-web-store/rating/ohhocacnnfaiphiahofcnfakdcfldbnh.svg?color=ff69b4" alt="Chrome Web Store" />
   </a>
-  <a href="https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn?color=9cf">
-    <img src="https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn?color=9cf" alt="Chrome Web Store" />
+  <a href="https://img.shields.io/chrome-web-store/users/ohhocacnnfaiphiahofcnfakdcfldbnh?color=9cf">
+    <img src="https://img.shields.io/chrome-web-store/users/ohhocacnnfaiphiahofcnfakdcfldbnh?color=9cf" alt="Chrome Web Store" />
   </a>
-</p>
+
 <b>Everything has been taken as is, redesigned and adapted to Hebrew</b>
 
-If you prefer to install manually, the latest binaries can be found [here](https://github.com/kmChrysalis/moodle-downloader/releases/latest).
+If you prefer to install manually, the latest binaries can be found [here](https://github.com/harsilspatel/MoodleDownloader/releases/latest).
 
 Install the latest version of MoodleDownloader from the chrome web store
 
-[![Chrome Web Store](https://github.com/GoogleChrome/webstore-docs/blob/master/images/ChromeWebStore_Badge_v2_496x150.png?raw=true)](https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn)
+[![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](https://chrome.google.com/webstore/detail/moodle-downloader/ohhocacnnfaiphiahofcnfakdcfldbnh)
 
 ## Why 💭
 There are dozens of apps/scripts for downloading moodle resources out there, however, none of them are operable by a non-IT student. For instance, an average art student doesn't know (or doesn't even care) how to execute terminal commands to get those moodle files, therefore I decided to create an average-user-friendly tool! Additionally, this is my exercise in both improving my javascript and better understand how google analytics and chrome apis work (mostly the latter!)

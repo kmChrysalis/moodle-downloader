@@ -1,49 +1,51 @@
-/**
- * moodleDownloader - a chrome extension for batch downloading Moodle resources 💾
- * Copyright (c) 2018 Harsil Patel
- * https://github.com/harsilspatel/MoodleDownloader
- */
-let resourcesList = [];
-let isDownloadActive = false;
-
-function main() {
-	// downloadResources on button press
-	const button = document.getElementById("downloadResources");
-	button.addEventListener("click", () => {
-		downloadResources();
-	});
-
-	document.getElementById("telegram").addEventListener("click", () => {
-		chrome.tabs.create({
-			url: "https://t.me/chrysal1s"
+//popup.js
+	let resourcesList = [];
+	let filesCounter = 0;
+	/*let isDownloadActive = false;*/
+//onload popup listener
+	document.addEventListener("DOMContentLoaded",
+		function() {
+		const button = document.getElementById("downloadResources");
+		//Button listened sending request to download files to a background script
+		button.addEventListener(
+			"click",
+			function() {
+				downloadFromSelected();
 		});
-	});
-
-	document.getElementById("github").addEventListener("click", () => {
-		chrome.tabs.create({
-			url: "https://github.com/kmChrysalis/moodle-downloader"
+		//Set some links and a search feature
+		document.getElementById("telegram").addEventListener("click", () => {
+			chrome.tabs.create({
+				url: "https://t.me/chrysal1s"
+			});
 		});
+		document.getElementById("github").addEventListener("click", () => {
+			chrome.tabs.create({
+				url: "https://github.com/kmChrysalis/moodle-downloader"
+			});
+		});
+		document.getElementById("search").addEventListener("input", () => {
+			filterOptions();
+		});
+		//Sending message to background to get a files
+		chrome.runtime.sendMessage({
+				name: "allFiles request"
+			},
+			function (response) {
+				console.log(response);
+				if(response.name === "files") {
+					resourcesList = response.files;
+					selectorOptions()
+				}
+			});
 	});
-
-	// filter resources on input
-	const searchField = document.getElementById("search");
-	searchField.addEventListener("input", () => {
-		filterOptions();
-	});
-
-	// executing background.js to populate the select form
-
-	chrome.tabs.executeScript({ file: "./src/background.js" }, result => {
+//Set selector options
+	function selectorOptions() {
 		try {
 			const resourceSelector = document.getElementById(
 				"resourceSelector"
 			);
-			const resources = result[0];
-			resourcesList = [...resources];
-			console.log(result);
-			resources.forEach((resource, index) => {
+			resourcesList.forEach((resource, index) => {
 				const resourceOption = document.createElement("option");
-
 				// creating option element such that the text will be
 				// the resource name and the option value its index in the array.
 				resourceOption.value = index.toString();
@@ -54,209 +56,96 @@ function main() {
 		} catch (error) {
 			console.log(error);
 		}
-	});
-	initStorage();
-}
+	}
+//search bar feature
+	function filterOptions() {
+		const searchField = document.getElementById("search");
+		const query = searchField.value.toLowerCase();
+		const regex = new RegExp(query, "i");
+		const options = document.getElementById("resourceSelector").options;
 
-function initStorage() {
-	chrome.storage.sync.get(["downloads", "alreadyRequested"], result => {
-		const downloads = result.downloads ? result.downloads : 0;
-		const alreadyRequested = result.alreadyRequested
-			? result.alreadyRequested
-			: false;
-		chrome.storage.sync.set(
-			{ downloads: downloads, alreadyRequested: alreadyRequested },
-			function() {
-				console.log("initialised storage variables");
-			}
-		);
-	});
-}
+		resourcesList.forEach((resource, index) => {
+			resource.name.match(regex)
+				? options[index].removeAttribute("hidden")
+				: options[index].setAttribute("hidden", "hidden");
+		});
+	}
+//get selected items from list and download'em
+	function downloadFromSelected() {
+		const INTERVAL = 500;
+		const button = document.getElementById("downloadResources");
+		const warning = document.getElementById("warning");
+		const resourceSelector = document.getElementById("resourceSelector");
+		const selectedOptions = Array.from(resourceSelector.selectedOptions);
 
-function requestFeedback() {
-	chrome.storage.sync.get(["downloads", "alreadyRequested"], result => {
-		if (result.downloads >= 50 && result.alreadyRequested === false) {
+		// hiding the button and showing warning text
+		button.setAttribute("hidden", "hidden");
+		warning.removeAttribute("hidden");
+
+		// showing the button and removing the text and requesting for feedback
+		setTimeout(() => {
+			warning.setAttribute("hidden", "hidden");
+			button.removeAttribute("hidden");
+		}, (selectedOptions.length + 4) * INTERVAL);
+
+		let selectedFilesList = [];
+
+		selectedOptions.map((option, index) => {
+			const resourceIndex = Number(option.value);
+			const resource = resourcesList[resourceIndex];
+			selectedFilesList.push(resource);
+		});
+		filesCounter += selectedFilesList.length;
+		chrome.runtime.sendMessage(
+			{
+				name: "Download Selected",
+				selected: selectedFilesList
+			},
+			function (response) {
+				console.log(response);
+			});
+
+		requestFeedback();
+	}
+//requesting feedback in body of popup
+	function requestFeedback() {
+		if (filesCounter > 1) {
 			const nah = document.getElementById("nah");
+			nah.removeAttribute("hidden");
+
 			const sure = document.getElementById("sure");
-			const feedbackDiv = document.getElementById("feedbackDiv");
+			sure.removeAttribute("hidden")
+
 			const feedbackPrompt = document.getElementById("feedbackPrompt");
-			feedbackDiv.removeAttribute("hidden");
+			feedbackPrompt.innerHTML =
+				"You just downloaded " + filesCounter + " files using this tool! 🎉 <br/><br/>" +
+				"I have spent more than <b>30 hours</b> to learn & develop this extension, could you please rate my efforts? 😬";
+
+			const feedbackDiv = document.getElementById("feedbackDiv");
+			feedbackDiv.setAttribute("style", "display: block");
 
 			nah.addEventListener("click", () => {
-				chrome.storage.sync.set({ alreadyRequested: true }, function() {
-					console.log("alreadyRequested is set to " + true);
-				});
-				nah.setAttribute("hidden", "hidden");
-				sure.setAttribute("hidden", "hidden");
-				feedbackPrompt.innerHTML = "No problem, you have a good one! 😄";
+				buttonEvent("No problem, you have a good one! 😄");
 				setTimeout(() => {
-					feedbackDiv.setAttribute("hidden", "hidden");
+					feedbackDiv.setAttribute("style", "display: none");
 				}, 2000);
 			});
 
 			sure.addEventListener("click", () => {
-				chrome.storage.sync.set({ alreadyRequested: true }, function() {
-					console.log("alreadyRequested is set to " + true);
-				});
-				nah.setAttribute("hidden", "hidden");
-				sure.setAttribute("hidden", "hidden");
-				feedbackPrompt.innerHTML = "Thanks so much 💝";
+				buttonEvent("Thanks so much 💝");
 				setTimeout(() => {
-					feedbackDiv.setAttribute("hidden", "hidden");
+					feedbackDiv.setAttribute("style", "display: none");
 					chrome.tabs.create({
-						url: "https://github.com/kmChrysalis/moodle-downloader/releases"
+						url: "https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn"
 					});
 				}, 2000);
 			});
+
+			function buttonEvent(string) {
+				nah.setAttribute("hidden", "hidden");
+				sure.setAttribute("hidden", "hidden");
+				feedbackPrompt.innerHTML = string;
+			}
 		}
-	});
-}
-
-function filterOptions() {
-	const searchField = document.getElementById("search");
-	const query = searchField.value.toLowerCase();
-	const regex = new RegExp(query, "i");
-	const options = document.getElementById("resourceSelector").options;
-
-	resourcesList.forEach((resource, index) => {
-		resource.name.match(regex)
-			? options[index].removeAttribute("hidden")
-			: options[index].setAttribute("hidden", "hidden");
-	});
-}
-
-function updateDownloads(newDownloads) {
-	chrome.storage.sync.get(["downloads"], result => {
-		const value = result.downloads ? result.downloads : 0;
-		console.log("Value currently is " + value);
-		const newValue = value + newDownloads;
-		console.log(typeof value);
-		chrome.storage.sync.set({ downloads: newValue }, function() {
-			console.log("Value is set to " + newValue);
-		});
-	});
-}
-
-let organizeChecked = false;
-let replaceFilename = false;
-
-function sanitiseFilename(filename) {
-	return filename.replace(/[\\/:*?"<>|]/g, " ");
-}
-
-function suggestFilename(downloadItem, suggest) {
-	const item = resourcesList.filter(r => r.downloadOptions.url === downloadItem.url)[0];
-	let filename = downloadItem.filename;
-	const sanitisedItemName = sanitiseFilename(item.name);
-
-	if (item.type === "URL") {
-		// The filename should be some arbitrary Blob UUID.
-		// We should always replace it with the item's name.
-		filename = sanitisedItemName + ".url";
-	} else if (item.type === "Page") {
-		filename = sanitisedItemName + ".html";
 	}
 
-	if (replaceFilename) {
-		const lastDot = filename.lastIndexOf(".");
-		const extension = lastDot === -1 ? "" : filename.slice(lastDot);
-		filename = sanitisedItemName + extension;
-	}
-
-	if (organizeChecked) {
-		suggest({
-			filename:
-				sanitiseFilename(item.course) +
-				"/" +
-				(item.section && sanitiseFilename(item.section) + "/") +
-				filename
-		});
-	} else {
-		suggest({ filename });
-	}
-}
-
-function downloadResources() {
-	const INTERVAL = 500;
-	const button = document.getElementById("downloadResources");
-	const warning = document.getElementById("warning");
-	const resourceSelector = document.getElementById("resourceSelector");
-	const selectedOptions = Array.from(resourceSelector.selectedOptions);
-	organizeChecked = document.getElementById("organize").checked;
-	const hasDownloadsListener = chrome.downloads.onDeterminingFilename.hasListener(
-		suggestFilename
-	);
-
-	// add listener to organize files
-	if (!hasDownloadsListener) {
-		chrome.downloads.onDeterminingFilename.addListener(suggestFilename);
-	}
-
-	// hiding the button and showing warning text
-	button.setAttribute("hidden", "hidden");
-	warning.removeAttribute("hidden");
-
-	// updating stats
-	updateDownloads(selectedOptions.length);
-
-	// showing the button and removing the text and requesting for feedback
-	setTimeout(() => {
-		warning.setAttribute("hidden", "hidden");
-		button.removeAttribute("hidden");
-		requestFeedback();
-	}, (selectedOptions.length + 4) * INTERVAL);
-
-	selectedOptions.forEach((option, index) => {
-		const resourceIndex = Number(option.value);
-		const resource = resourcesList[resourceIndex];
-		if (resource.type === "URL") {
-			// We need to get the URL of the redirect and create a blob for it.
-			fetch(resource.downloadOptions.url, { method: "HEAD" }).then(
-				req => {
-					const blob = new Blob(
-						[`[InternetShortcut]\nURL=${req.url}\n`],
-						{ type: "text/plain" }
-					);
-					const blobUrl = URL.createObjectURL(blob);
-					const newOptions = {
-						url: blobUrl
-					};
-					resource.downloadOptions = newOptions;
-					setTimeout(() => {
-						chrome.downloads.download(newOptions);
-					}, index * INTERVAL);
-				}
-			);
-		} else if (resource.type === "Page") {
-			fetch(resource.downloadOptions.url)
-				.then(req => {
-					return req.text();
-				})
-				.then(text => {
-					// We want to grab "[role='main']" from the text and save that
-					// as an HTML file.
-					const parser = new DOMParser();
-					const doc = parser.parseFromString(text, "text/html");
-					const toSave = doc.querySelector("[role='main']").outerHTML;
-					const blob = new Blob([toSave], { type: "text/html" });
-					const blobUrl = URL.createObjectURL(blob);
-					const newOptions = {
-						url: blobUrl
-					};
-					resource.downloadOptions = newOptions;
-					setTimeout(() => {
-						chrome.downloads.download(newOptions);
-					}, index * INTERVAL);
-				});
-		} else {
-			setTimeout(() => {
-				chrome.downloads.download(resource.downloadOptions);
-			}, index * INTERVAL);
-		}
-	});
-	isDownloadActive = false;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-	main();
-});

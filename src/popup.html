@@ -1,60 +1,53 @@
 <meta charset="UTF-8">
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-		<title>moodleDownloader</title>
-		<link href="../css/popup.css" rel="stylesheet" type="text/css">
-		<link href="../css/style.css" rel="stylesheet" type="text/css">
-		<link href="../css/material.min.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<script src="../css/material.min.js"></script>
-		<script src="./popup.js"></script>
+	<title>moodleDownloader</title>
+	<link href="../css/popup.css" rel="stylesheet" type="text/css">
+	<link href="../css/style.css" rel="stylesheet" type="text/css">
+	<link href="../css/material.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script src="../css/material.min.js"></script>
+	<script src="./popup.js"></script>
 </head>
-		<div class="demo-card-wide mdl-card mdl-shadow--2dp" id="body">
-			<div class="mdl-card__title" id="header">
-					<h2 class="mdl-card__title-text">moodleDownloader 📚</h2>
-			</div>
 
-			<div class="mdl-card__actions mdl-card--border">
-				<div class="mdl-textfield mdl-js-textfield" id="search_bar">
-						<input class="mdl-textfield__input" id="search" type="text">
-						<label class="mdl-textfield__label" for="search" id="search_label">search... (regex supported)</label>
-				</div>
+<body>
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+	<div class="mdl-card__title" id="header">
+		<h2 class="mdl-card__title-text">moodleDownloader 📚</h2>
+	</div>
 
-				<label for="resourceSelector"></label>
-				<select class="mdl-textfield__input" id="resourceSelector" multiple></select>
+	<div class="mdl-card__actions mdl-card--border">
+		<div class="mdl-textfield mdl-js-textfield" id="search_bar">
+			<input class="mdl-textfield__input" id="search" type="text">
+			<label class="mdl-textfield__label" for="search" id="search_label">search... (regex supported)</label>
+		</div>
 
-				<div id="footer">
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="organize">
-								<input checked class="mdl-checkbox__input" id="organize" type="checkbox">
-								<span class="mdl-checkbox__label" id="checkbox_label_1">Organize into folder</span>
-						</label>
+		<label for="resourceSelector"></label>
+		<select class="mdl-textfield__input" id="resourceSelector" multiple></select>
 
-						<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-										id="downloadResources">Download
-						</button>
-
-						<label hidden="hidden" id="warning">Please keep this window open until selected resources are not downloaded...</label>
-						<a href="">
-								<img alt="Write me on Telegram" id="telegram" src="../assets/telegram.svg">
-						</a>
-						<a href="">
-								<img alt="Source code" id="github" src="../assets/github120.png">
-						</a>
-
-						<div hidden="hidden" id="feedbackDiv">
-						<br>
-						<small id="feedbackPrompt">You just downloaded 50th file using this tool! 🎉 <br/>
-							<br/> I have spent more than <b>30 hours</b> to learn & develop this extension, could you please
-							rate my efforts? 😬</small>
-						<button class="mdl-button mdl-js-button mdl-button--accent" id="sure">
-							Sure! 😎
-						</button>
-						<button class="mdl-button mdl-js-button mdl-button--primary" id="nah">
-						Nah! 😒
-						</button>
-					</div>
-				</div>
+		<div class="footer">
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="downloadResources">Download</button>
+			<label hidden="hidden" id="warning">Please keep this window open until selected resources are not downloaded...</label>
+			<a href="">
+				<img alt="Write me on Telegram" id="telegram" src="../assets/telegram.svg">
+			</a>
+			<a href="">
+				<img alt="Source code" id="github" src="../assets/github120.png">
+			</a>
+			<div id="feedbackDiv" style="display: none">
+				<br>
+				<small id="feedbackPrompt"></small>
+				<button class="mdl-button mdl-js-button mdl-button--accent" id="sure">
+					Sure! 😎
+				</button>
+				<button class="mdl-button mdl-js-button mdl-button--primary" id="nah">
+					Nah! 😒
+				</button>
 			</div>
 		</div>
+	</div>
+</div>
+</body>
 </html>

@@ -6,3 +6,10 @@
 	border-radius: .25rem;
 }
 
+#shareLink {
+	display: inline-flex;
+	vertical-align: middle;
+	float: right;
+	padding-top: 1%;
+	color: black;
+}
