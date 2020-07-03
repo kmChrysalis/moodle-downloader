@@ -22,10 +22,7 @@
                 let btn = this;
                 btn.disabled = true;
                 let sectionFilesList = allFiles.filter(res => res.section === section);
-                chrome.runtime.sendMessage({
-                        name: "Download Section",
-                        array: sectionFilesList
-                    },
+                chrome.runtime.sendMessage({ message: "Download Section", array: sectionFilesList },
                     function (response) {
                         if (response.message === "wait") {
                             setTimeout(() => {
@@ -34,7 +31,6 @@
                         }
                     });
             });
-
             //create a list to beautiful append
             let li = header.firstChild.cloneNode(); //<ul> => <li...>
             li.appendChild(button) //<li> => <button>
@@ -53,7 +49,7 @@
         // but getting the window object is hard.
         // Instead, we can grab the session key from the logout button.
         // Note that var is used here as this script can be executed multiple times.
-        const sesskey = new URL( //TODO remove maybe if possible
+        const sesskey = new URL(
             document.querySelector("a[href*='login/logout.php']").href
         ).searchParams.get("sesskey");
 
@@ -67,7 +63,7 @@
             : getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES);
         allFiles.forEach(file => (file.course = courseName));
         chrome.runtime.sendMessage({
-                name: "All Files",
+                message: "All Files",
                 files: allFiles
             },
             function (response) {
@@ -142,27 +138,27 @@
             .reduce((x, y) => x.concat(y), []);
     }
     function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES) {
-    return Array.from(tableBody.children) // to get files under Resources tab
-        .filter(resource => resource.getElementsByTagName("img").length !== 0)
-        .map(
-            resource => {
-                (resource = {
-                    name: resource.getElementsByTagName("a")[0].textContent.trim(),
-                    downloadOptions: getDownloadOptions(sesskey, resource.getElementsByTagName("a")[0].href),
-                    type: resource.getElementsByTagName("img")[0]["alt"].trim(),
-                    section: resource.getElementsByTagName("td")[0].textContent.trim()
-                })
-            }
-        )
-        .map((resource, index, array) => {
-            resource.section =
-                resource.section ||
-                (array[index - 1] && array[index - 1].section) ||
-                "";
-            return resource;
-        })
-        .filter(resource => SUPPORTED_FILES.has(resource.type));
-}
+        return Array.from(tableBody.children) // to get files under Resources tab
+            .filter(resource => resource.getElementsByTagName("img").length !== 0)
+            .map(
+                resource => {
+                    (resource = {
+                        name: resource.getElementsByTagName("a")[0].textContent.trim(),
+                        downloadOptions: getDownloadOptions(sesskey, resource.getElementsByTagName("a")[0].href),
+                        type: resource.getElementsByTagName("img")[0]["alt"].trim(),
+                        section: resource.getElementsByTagName("td")[0].textContent.trim()
+                    })
+                }
+            )
+            .map((resource, index, array) => {
+                resource.section =
+                    resource.section ||
+                    (array[index - 1] && array[index - 1].section) ||
+                    "";
+                return resource;
+            })
+            .filter(resource => SUPPORTED_FILES.has(resource.type));
+    }
 //cleanup content names
     function cleanupCourseName(name) {
         return (name.slice(-10) === 'הנדסת תכנה') ? name.slice(0, -22) : name;
@@ -170,4 +166,3 @@
     function cleanupSection(name) {
         return (name.slice(-6) === 'הקליקו' || name.slice(-6) === 'Toggle') ? name.slice(0, -9) : name;
 }
-/*TODO remove hard-coded names*/

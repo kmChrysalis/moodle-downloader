@@ -12,7 +12,7 @@
 	font-size:75%;
 }
 
-#search_bar{
+#search_bar {
 	top: 0;
 	height: 25px;
 	padding: 0;
@@ -31,7 +31,7 @@
 	padding-left: 10px;
 }
 
-#resourceSelector{
+#resourceSelector {
 	direction: rtl;
 	height: auto;
 }
@@ -60,3 +60,14 @@
 .footer {
 	margin-top: 10px;
 }
+
+#feedbackDiv.closed, #buttons.closed {
+	overflow-y: hidden;
+	height: 0;
+}
+
+#feedbackDiv, #buttons {
+	height: fit-content;
+	padding-top: 7px;
+}
+

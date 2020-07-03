@@ -25,7 +25,6 @@
   "permissions": [
     "activeTab",
     "downloads",
-    "tabs",
     "*://*/course/*"
   ],
   "background": {
@@ -33,8 +32,6 @@
     "persistent": false
   },
   "web_accessible_resources": [
-    "css/*",
-    "src/*",
     "assets/*"
   ]
 }

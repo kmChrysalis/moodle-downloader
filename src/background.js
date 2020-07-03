@@ -1,60 +1,52 @@
 //background.js
-    const INTERVAL = 1000;
     let resourcesList = [];
 //Message manager
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
-            switch (request.name) {
+            switch (request.message) {
                 case "Download Section":
-                    downloadResources(request.array, sendResponse);
-                    /*sendResponse("background.js saying: Resources under loading")*/
+                    downloadResources(request.array, 0, sendResponse);
+                    sendResponse({ message: "Download section execute" } );
                     break;
                 case "Download Selected":
-                    downloadResources(request.selected, sendResponse);
-
+                    downloadResources(request.selected, 0, sendResponse);
+                    sendResponse({ message: "Download selected execute" } );
                     break;
                 case "All Files":
                     resourcesList = request.files;
-                    sendResponse("background.js saying: Your files were saved by background.js");
+                    sendResponse({ message: "All files execute" } );
                     break;
                 case "allFiles request":
-                    sendResponse({
-                        name: "files",
-                        files: resourcesList
-                    });
+                    sendResponse({ message: "files", files: resourcesList } );
                     break;
                 default:
-                    sendResponse("background.js saying: Invalid request");
+                    sendResponse({ message:  "Invalid request" });
             }
         });
+
 //Download files from array received
-    function downloadResources(arr, sendResponse) {
-        arr.forEach((resource, index) => download(resource, index, sendResponse)); //call download
-        sendResponse({message: "wait", time: arr.length * INTERVAL})
-    }
-//download a file by index
-    function download(resource, index) {
+    function downloadResources(resourcesArr, index) {
         let blob;
         let blobUrl;
         let newOptions = {
             url: "",
             conflictAction: "overwrite"
         }
-        if (resource.type === "URL") {
+        if (resourcesArr[index].type === "URL") {
             // We need to get the URL of the redirect and create a blob for it.
-            fetch(resource.downloadOptions.url, {method: "HEAD"}).then(
-                req => {
-                    blob = new Blob(
-                        [`[InternetShortcut]\nURL=${req.url}\n`],
-                        {type: "text/plain"}
-                    );
-                    blobUrl = URL.createObjectURL(blob);
-                    newOptions.url = blobUrl;
-                    resource.downloadOptions = newOptions;
-                }
-            );
-        } else if (resource.type === "Page") {
-            fetch(resource.downloadOptions.url)
+            fetch(resourcesArr[index].downloadOptions.url, { method: "HEAD" })
+                .then(req => {
+                        blob = new Blob(
+                            [`[InternetShortcut]\nURL=${req.url}\n`],
+                            {type: "text/plain"}
+                        );
+                        blobUrl = URL.createObjectURL(blob);
+                        newOptions.url = blobUrl;
+                        resourcesArr[index].downloadOptions = newOptions;
+                    }
+                );
+        } else if (resourcesArr[index].type === "Page") {
+            fetch(resourcesArr[index].downloadOptions.url)
                 .then(req => {
                     return req.text();
                 })
@@ -67,18 +59,16 @@
                     blob = new Blob([toSave], {type: "text/html"});
                     blobUrl = URL.createObjectURL(blob);
                     newOptions.url = blobUrl;
-                    resource.downloadOptions = newOptions;
+                    resourcesArr[index].downloadOptions = newOptions;
                 });
-        } else {
-            newOptions.url = resource.downloadOptions.url;
-        }
-        setTimeout(() => {
-            chrome.downloads.download(newOptions);
-        }, index * INTERVAL);
-
+        } else newOptions.url = resourcesArr[index].downloadOptions.url;
+        chrome.downloads.download(newOptions,
+            () => index < resourcesArr.length - 1
+                ? downloadResources(resourcesArr, ++index)
+                : chrome.runtime.sendMessage({ message: "done" }));
     }
-//downloading listener
-//TODO Rewrite or not download already existing files
+
+//filename listener
     chrome.downloads.onDeterminingFilename.addListener( //suggestFileName
     function(downloadItem, suggest) {
         const item = resourcesList.filter(r => r.downloadOptions.url === downloadItem.url)[0];
@@ -98,8 +88,8 @@
             filename;
         suggest({filename: filename, conflictAction: "overwrite"});
     });
+
 //clear file names to be displayed
     function sanitiseFilename(filename) {
-    return filename.replace(/[\\/:*?"<>|]/g, " ");
-}
-//initializing user storage
+        return filename.replace(/[\\/:*?"<>|]/g, " ");
+    }
