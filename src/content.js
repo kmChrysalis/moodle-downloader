@@ -4,13 +4,15 @@
     (function setButtons() {
         let content = getContentSections();
         let icon = chrome.runtime.getURL("assets/w_icon24.png");
-
+        let warning = document.createElement("p");
+        warning.innerText = "🧙 Please stay on page while magic happens   ";
+        warning.setAttribute("style", "display: inline; color: #1177d1; font-weight: bold;");
         content.forEach(header => {
             let sectionHTML =
                 header.parentElement.parentElement.getElementsByClassName('sectionname')
                     .item(0);
 
-            let section = (sectionHTML === null) ? "noname" : sectionHTML.innerHTML
+            let section = (sectionHTML === null) ? "General" : sectionHTML.innerHTML
 
             //lets create button
             let button = document.createElement("button"); //<button type="button"
@@ -21,14 +23,17 @@
             button.addEventListener("click", function () {
                 let btn = this;
                 btn.disabled = true;
+                btn.parentElement.appendChild(warning);
                 let sectionFilesList = allFiles.filter(res => res.section === section);
-                chrome.runtime.sendMessage({ message: "Download Section", array: sectionFilesList },
-                    function (response) {
-                        if (response.message === "wait") {
-                            setTimeout(() => {
-                                btn.disabled = false;
-                            }, response.time);
-                        }
+                chrome.runtime.sendMessage({message: "Download Section", array: sectionFilesList},
+                    response => {
+                        console.log(response);
+                        chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+                            console.log(request);
+                            btn.disabled = !(request.message === "done" && request.to === "page");
+                            btn.parentElement.removeChild(btn.parentElement.lastChild);
+                            sendResponse("Button disabled");
+                        });
                     });
             });
             //create a list to beautiful append
@@ -39,12 +44,12 @@
     })();
 //getting files to all files list
     function getFiles() {
-        const courseName = cleanupCourseName( //set course name
-            document.getElementsByTagName("h1")[0].innerText ||
-            document.getElementsByClassName("breadcrumb-item")[2].firstElementChild.title ||
+        const courseName = /*cleanupCourseName(*/ //set course name
+            document.getElementsByClassName("breadcrumb-item")[2].textContent.trim() || //try to get course name
+            document.getElementsByTagName("h1")[0].innerText || //if no course name, get probably university name
             document.querySelector("header#page-header .header-title").textContent.trim() ||
-            "");
-
+            "";
+        /*document.getElementsByClassName("breadcrumb-item")[2].firstElementChild.title ||*/
         // The session key should normally be accessible through window.M.cfg.sesskey,
         // but getting the window object is hard.
         // Instead, we can grab the session key from the logout button.
@@ -118,7 +123,7 @@
                 let sectionEl = content.querySelector("h3.sectionname");
                 if (!sectionEl) {
                     sectionEl = document.createElement("div")
-                    sectionEl.innerText = "noname";
+                    sectionEl.innerText = "General";
                 }
                 const section = cleanupSection(sectionEl.textContent.trim());
                 return Array.from(content.getElementsByClassName("activity"))
@@ -159,10 +164,7 @@
             })
             .filter(resource => SUPPORTED_FILES.has(resource.type));
     }
-//cleanup content names
-    function cleanupCourseName(name) {
-        return (name.slice(-10) === 'הנדסת תכנה') ? name.slice(0, -22) : name;
-}
+
     function cleanupSection(name) {
         return (name.slice(-6) === 'הקליקו' || name.slice(-6) === 'Toggle') ? name.slice(0, -9) : name;
 }

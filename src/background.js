@@ -5,19 +5,19 @@
         function(request, sender, sendResponse) {
             switch (request.message) {
                 case "Download Section":
-                    downloadResources(request.array, 0, sendResponse);
+                    downloadResources(request.array, 0, "page");
                     sendResponse({ message: "Download section execute" } );
                     break;
                 case "Download Selected":
-                    downloadResources(request.selected, 0, sendResponse);
+                    downloadResources(request.selected, 0, "popup");
                     sendResponse({ message: "Download selected execute" } );
                     break;
                 case "All Files":
                     resourcesList = request.files;
-                    sendResponse({ message: "All files execute" } );
+                    sendResponse({ message: "All files received" } );
                     break;
                 case "allFiles request":
-                    sendResponse({ message: "files", files: resourcesList } );
+                    sendResponse({ message: "All files sent", files: resourcesList } );
                     break;
                 default:
                     sendResponse({ message:  "Invalid request" });
@@ -25,7 +25,7 @@
         });
 
 //Download files from array received
-    function downloadResources(resourcesArr, index) {
+    function downloadResources(resourcesArr, index, receiver) {
         let blob;
         let blobUrl;
         let newOptions = {
@@ -63,9 +63,18 @@
                 });
         } else newOptions.url = resourcesArr[index].downloadOptions.url;
         chrome.downloads.download(newOptions,
-            () => index < resourcesArr.length - 1
-                ? downloadResources(resourcesArr, ++index)
-                : chrome.runtime.sendMessage({ message: "done" }));
+            () => {
+                index < resourcesArr.length - 1
+                    ? downloadResources(resourcesArr, ++index, receiver)
+                    : receiver === "popup"
+                    ? chrome.runtime.sendMessage({ message: "done", to: receiver })
+                    : chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+                        chrome.tabs.sendMessage(tabs[0].id, { message: "done", to: receiver },
+                            function(response) {
+                            console.log(response);
+                        });
+                    });
+            });
     }
 
 //filename listener

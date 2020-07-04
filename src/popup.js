@@ -49,13 +49,13 @@
 			chrome.runtime.sendMessage({message: "allFiles request"},
 				function (response) {
 					console.log(response);
-					if (response.message === "files") {
+					if (response.message === "All files sent") {
 						resourcesList = response.files;
 						appendOptionsList()
 					}
 				});
 			chrome.runtime.onMessage.addListener(
-				response => response.message === "done"
+				response => (response.message === "done" && response.to === "popup")
 					? requestFeedback(warning, button)
 					: console.log(response));
 		});
