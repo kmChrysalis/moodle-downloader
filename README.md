@@ -3,13 +3,22 @@
     <img src="https://github.com/kmChrysalis/moodle-downloader/raw/master/assets/icon512.png" width="20%" height="20%">
   </a>
 </p>
-
 <h1 align="center">
   MoodleDownloader v2
 </h1>
 
-<p align="center"><img src="https://img.shields.io/github/license/kmChrysalis/moodle-downloader" alt="GitHub"><img src="https://img.shields.io/github/all-contributors/kmChrysalis/moodle-downloader" alt="Github All Contributors"><img src="https://img.shields.io/chrome-web-store/v/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"><img src="https://img.shields.io/chrome-web-store/rating/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"><img src="https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"></p>
-<p align="center"><a href="https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn"><img src="https://github.com/GoogleChrome/webstore-docs/blob/master/images/ChromeWebStore_Badge_v2_496x150.png?raw=true" alt="Chrome Web Store"></a></p>
+<p align="center">
+	<img src="https://img.shields.io/github/license/kmChrysalis/moodle-downloader" alt="GitHub"> 
+	<img src="https://img.shields.io/github/all-contributors/kmChrysalis/moodle-downloader" alt="Github All Contributors">
+	<img src="https://img.shields.io/chrome-web-store/v/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store">
+	<img src="https://img.shields.io/chrome-web-store/rating/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store">
+	<img src="https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store">
+</p>
+<p align="center">
+	<a href="https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn">
+		<img src="https://github.com/GoogleChrome/webstore-docs/blob/master/images/ChromeWebStore_Badge_v2_496x150.png?raw=true" alt="Chrome Web Store">
+	</a>
+</p>
 
 <b>The fork of [harsilspatel’s](https://github.com/harsilspatel/moodle-downloader) moodleDownloader chrome extension which was edited and adapted for hebrew-language, but it still works great with english too!</b>
 
