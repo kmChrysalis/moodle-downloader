@@ -5,18 +5,15 @@
 </p>
 
 <h1 align="center">
-  MoodleDownloader (Hebrew adaptation)
+  MoodleDownloader v2
 </h1>
 
-​																	![GitHub](https://img.shields.io/github/license/kmChrysalis/moodle-downloader)![Github All Contributors](https://img.shields.io/github/all-contributors/kmChrysalis/moodle-downloader)![Chrome Web Store](https://img.shields.io/chrome-web-store/v/egdgajocnmpjhghpglffhngdojcinkhn)![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/egdgajocnmpjhghpglffhngdojcinkhn)![Chrome Web Store](https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn)
+<p align="center"><img src="https://img.shields.io/github/license/kmChrysalis/moodle-downloader" alt="GitHub"><img src="https://img.shields.io/github/all-contributors/kmChrysalis/moodle-downloader" alt="Github All Contributors"><img src="https://img.shields.io/chrome-web-store/v/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"><img src="https://img.shields.io/chrome-web-store/rating/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"><img src="https://img.shields.io/chrome-web-store/users/egdgajocnmpjhghpglffhngdojcinkhn" alt="Chrome Web Store"></p>
+<p align="center"><a href="https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn"><img src="https://github.com/GoogleChrome/webstore-docs/blob/master/images/ChromeWebStore_Badge_v2_496x150.png?raw=true" alt="Chrome Web Store"></a></p>
 
-​																	[![Chrome Web Store](https://github.com/GoogleChrome/webstore-docs/blob/master/images/ChromeWebStore_Badge_v2_496x150.png?raw=true)](https://chrome.google.com/webstore/detail/moodle-downloader/egdgajocnmpjhghpglffhngdojcinkhn)
+<b>The fork of [harsilspatel’s](https://github.com/harsilspatel/moodle-downloader) moodleDownloader chrome extension which was edited and adapted for hebrew-language, but it still works great with english too!</b>
 
-
-
-<b>This is the fork of harsilspatel’s moodleDownloader chrome extension which was reworked and a bit redesigned </b>
-
-<h5> This fork changes:
+<h5>New features:</h5>
 
 - No more google analytics
 - Minimalistic design
