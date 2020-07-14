@@ -33,8 +33,6 @@
 
 #resourceSelector {
 	direction: rtl;
-	min-width: inherit;
-	width: auto;
 }
 
 #warning {
