@@ -17,7 +17,7 @@
             //lets create button
             let button = document.createElement("button"); //<button type="button"
             button.setAttribute("style", "background: #1177d1 url(" + icon + ") no-repeat 6px 7px;");
-            button.setAttribute("dir", "ltr");
+            /*button.setAttribute("dir", "ltr");*/
             button.setAttribute("id", "dl-button");
             button.innerHTML = "[" + section + "]"; //Section Download</button>
             button.addEventListener("click", function () {
@@ -25,7 +25,8 @@
                 btn.disabled = true;
                 btn.parentElement.appendChild(warning);
                 let sectionFilesList = allFiles.filter(res => res.section === section);
-                chrome.runtime.sendMessage({message: "Download Section", array: sectionFilesList},
+                chrome.runtime.sendMessage(
+                    {message: "Download Section", array: sectionFilesList},
                     response => {
                         console.log(response);
                         chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -166,5 +167,5 @@
     }
 
     function cleanupSection(name) {
-        return (name.slice(-6) === 'הקליקו' || name.slice(-6) === 'Toggle') ? name.slice(0, -9) : name;
+        return name.replace(' - הקליקו', '').replace('Toggle - ', '');
 }

@@ -6,18 +6,18 @@
             switch (request.message) {
                 case "Download Section":
                     downloadResources(request.array, 0, "page");
-                    sendResponse({ message: "Download section execute" } );
+                    sendResponse({ message: "Download section execute" });
                     break;
                 case "Download Selected":
                     downloadResources(request.selected, 0, "popup");
-                    sendResponse({ message: "Download selected execute" } );
+                    sendResponse({ message: "Download selected execute" });
                     break;
                 case "All Files":
                     resourcesList = request.files;
-                    sendResponse({ message: "All files received" } );
+                    sendResponse({ message: "All files received" });
                     break;
                 case "allFiles request":
-                    sendResponse({ message: "All files sent", files: resourcesList } );
+                    sendResponse({ message: "All files sent", files: resourcesList });
                     break;
                 default:
                     sendResponse({ message:  "Invalid request" });
@@ -78,27 +78,24 @@
     }
 
 //filename listener
-    chrome.downloads.onDeterminingFilename.addListener( //suggestFileName
-    function(downloadItem, suggest) {
+    chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
         const item = resourcesList.filter(r => r.downloadOptions.url === downloadItem.url)[0];
-        let filename = downloadItem.filename;
-        const sanitisedItemName = sanitiseFilename(item.name);
-
+        let sanitisedItemName = sanitiseFilename(item.name) + '.' + downloadItem.filename.split('.')[1];
         if (item.type === "URL") {
             // The filename should be some arbitrary Blob UUID.
             // We should always replace it with the item's name.
-            filename = sanitisedItemName + ".url";
+            sanitisedItemName += ".url";
         } else if (item.type === "Page") {
-            filename = sanitisedItemName + ".html";
+            sanitisedItemName += ".html";
         }
-        filename = sanitiseFilename(item.course) +
+        let filename = sanitiseFilename(item.course) +
             "/" +
-            (item.section && sanitiseFilename(item.section) + "/") +
-            filename;
+            sanitiseFilename(item.section) +
+            "/" +
+            sanitisedItemName;
         suggest({filename: filename, conflictAction: "overwrite"});
     });
-
 //clear file names to be displayed
     function sanitiseFilename(filename) {
-        return filename.replace(/[\\/:*?"<>|]/g, " ");
+        return filename.replace(/[\\/:*?"<>|]/g, " ").trim();
     }
