@@ -123,9 +123,12 @@
             .map(content => {
                 let sectionEl = content.querySelector("h3.sectionname");
                 if (!sectionEl) {
-                    sectionEl = document.createElement("div")
-                    sectionEl.innerText = "General";
+					sectionEl = content.querySelector("div.summary");
                 }
+				if (!sectionEl) {
+					sectionEl = document.createElement("div");
+					sectionEl.innerText = "General";
+				}
                 const section = cleanupSection(sectionEl.textContent.trim());
                 return Array.from(content.getElementsByClassName("activity"))
                     .map(activity => ({
