@@ -48,7 +48,6 @@
 			//Sending message to background to get a files
 			chrome.runtime.sendMessage({message: "allFiles request"},
 				function (response) {
-					console.log(response);
 					if (response.message === "All files sent") {
 						resourcesList = response.files;
 						appendOptionsList()
