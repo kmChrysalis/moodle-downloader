@@ -1,56 +1,58 @@
 //content.js
-    let allFiles = getFiles();
+document.querySelectorAll('div.cttoggle, a.cps_centre, .side').forEach(e => e.remove());
+	let sectionsMap = new Map();
+    let resourcesList = getFiles();
 
 //setting buttons on a page by self-invoking method
-    (function setButtons() {
-		let content = getContentSections();
+    function setButtons() {
 		let icon = chrome.runtime.getURL("assets/w_icon24.png");
 		let warning = document.createElement("p");
 		warning.innerText = "🧙 Please stay on page while magic happens   ";
 		warning.setAttribute("style", "display: inline; color: #1177d1; font-weight: bold;");
-		content.forEach(header => {
-			let sectionHTML =
-				header.parentElement.parentElement.getElementsByClassName('sectionname')
-					.item(0);
-
-			let section = (sectionHTML === null) ? "General" : sectionHTML.innerHTML
-
+		warning.setAttribute("class", "warning-ext");
+		sectionsMap.forEach((sectionEl, sectionName) => {
+			if (sectionName === "General")
+				sectionEl = document.querySelector('.content').querySelector('.section');
+			else {
+				while(sectionEl.className !== "content") sectionEl = sectionEl.parentElement;
+				sectionEl = sectionEl.lastChild.lastChild;
+				if (sectionEl.childNodes.length === 0) {
+					sectionEl.parentNode.parentNode.parentNode.remove();
+					return;
+				}
+			}
 			//lets create button
 			let button = document.createElement("button"); //<button type="button"
 			button.setAttribute("style", "background: #1177d1 url(" + icon + ") no-repeat 6px 7px;");
 			button.setAttribute("id", "dl-button");
-			button.innerHTML = "[" + section + "]"; //Section Download</button>
+			button.innerHTML = "[" + sectionName+ "]"; //Section Download</button>
 			button.addEventListener("click", function () {
 				let btn = this;
 				btn.disabled = true;
 				btn.parentElement.appendChild(warning);
-				if (section === "General") section = "";
-				let sectionFilesList = allFiles.filter(res => res.section === section);
-				chrome.runtime.sendMessage(
-					{message: "Download Section", array: sectionFilesList},
-					response => {
-						chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-							btn.disabled = !(request.message === "done" && request.to === "page");
-							btn.parentElement.removeChild(btn.parentElement.lastChild);
-							sendResponse("Button disabled");
-						});
-					});
+				let sectionFilesList = resourcesList.filter(res => res.section === sectionName);
+				chrome.runtime.sendMessage({message: "Download Section", array: sectionFilesList});
+				chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+					btn.disabled = !(request.message === "done" && request.to === "page");
+					button.parentElement.getElementsByTagName("p")[0].remove();
+					sendResponse("Button enabled");
+				});
 			});
-			//create a list to beautiful append
-			let li = header.firstChild.cloneNode(); //<ul> => <li...>
+
+			let li = sectionEl.firstChild.cloneNode(); //<ul> => <li...>
 			li.appendChild(button) //<li> => <button>
-			header.insertBefore(li, header.firstChild); //insert before first element in <ul>
+			sectionEl.insertBefore(li, sectionEl.firstChild); //insert before first element in <ul>
 		});
-	})();
+	}
 //getting files to all files list
     function getFiles() {
-		let courseName = /*cleanupCourseName(*/ //set course name
+		let courseName = //set course name
 			document.getElementsByClassName("breadcrumb-item")[2].textContent.trim() || //try to get course name
 			document.getElementsByTagName("h1")[0].innerText || //if no course name, get probably university name
 			document.querySelector("header#page-header .header-title").textContent.trim() ||
 			"";
 		courseName = courseName.replace(/[^a-zA-Z\u0590-\u05FF\uFB2A-\uFB4E ]/g, "")
-			.replace("  ", "")
+			.replace(/[ ]{2,}/, "") //name cleanup
 		// The session key should normally be accessible through window.M.cfg.sesskey,
 		// but getting the window object is hard.
 		// Instead, we can grab the session key from the logout button.
@@ -62,12 +64,10 @@
 		const tableBody = document.querySelector(
 			"div[role='main'] > table.generaltable.mod_index > tbody"
 		);
-		const SUPPORTED_FILES = new Set(["File", "Folder", "URL", "Page", "קובץ"]);
-
+		const SUPPORTED_FILES = new Set(["File", "Folder", "URL", "Page", "קובץ", "תצוגת תיקיית קבצים", "קישור לאתר אינטרנט", "דף תוכן מעוצב"]);
 		const allFiles = tableBody === null
-			? getFilesUnderSections(sesskey, SUPPORTED_FILES)
-			: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES);
-		allFiles.forEach(file => (file.course = courseName));
+			? getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName).filter(x => x)
+			: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES, courseName).filter(x => x);
 		chrome.runtime.sendMessage({
 				message: "All Files",
 				files: allFiles
@@ -75,20 +75,8 @@
 			function (response) {
 				console.log(response);
 			});
+		setButtons();
 		return allFiles;
-	}
-
-    function getContentSections() {
-		document.querySelectorAll('a.cps_centre')
-			.forEach(a =>
-				a.setAttribute("style", "padding-left: 70px"));
-		document.querySelectorAll('div.cttoggle')
-			.forEach(e => e.remove())
-
-		return Array
-			.from(document
-				.getElementsByClassName('section img-text'))
-			.filter(node => node.firstChild);
 	}
 
     function getDownloadOptions(sesskey, url) {
@@ -121,18 +109,18 @@
 		};
 	}
 
-    function getFilesUnderSections(sesskey, SUPPORTED_FILES) {
-		return Array.from(document.getElementsByClassName("content"))
+    function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
+		return Array.from(document.querySelectorAll('.content'))
 			.map(content => {
-				let sectionEl = content.querySelector("h3.sectionname");
-				if (!sectionEl) {
-					sectionEl = content.querySelector("div.summary");
-				}
-				if (!sectionEl) {
+				let sectionEl = content.querySelector(".sectionname");
+				if (!sectionEl) sectionEl = content.querySelector(".summary");
+				if (!sectionEl || sectionEl.textContent.length > 50) {
 					sectionEl = document.createElement("div");
-					sectionEl.innerText = "";
+					sectionEl.textContent = "General";
 				}
-				const section = cleanupSection(sectionEl.textContent.trim());
+				if (sectionEl.childNodes.length === 0) return;
+				const sectionName = cleanupSection(sectionEl.textContent.trim());
+				sectionsMap.set(sectionName, sectionEl);
 				return Array.from(content.getElementsByClassName("activity"))
 					.map(activity => ({
 						instanceName: activity.getElementsByClassName("instancename")[0],
@@ -140,22 +128,23 @@
 					}))
 					.filter(({instanceName, anchorTag}) => instanceName !== undefined && anchorTag !== undefined)
 					.map(({instanceName, anchorTag}) => ({
+						course: courseName,
 						name: instanceName.firstChild.textContent.trim(),
 						downloadOptions: getDownloadOptions(sesskey, anchorTag.href),
 						type: instanceName.lastChild.textContent.trim(),
-						section: section
+						section: sectionName
 					}))
 					.filter(activity => SUPPORTED_FILES.has(activity.type));
 			})
 			.reduce((x, y) => x.concat(y), []);
 	}
 
-    function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES) {
+    function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES, courseName) {
 		return Array.from(tableBody.children) // to get files under Resources tab
 			.filter(resource => resource.getElementsByTagName("img").length !== 0)
-			.map(
-				resource => {
+			.map(resource => {
 					(resource = {
+						courseName: courseName,
 						name: resource.getElementsByTagName("a")[0].textContent.trim(),
 						downloadOptions: getDownloadOptions(sesskey, resource.getElementsByTagName("a")[0].href),
 						type: resource.getElementsByTagName("img")[0]["alt"].trim(),

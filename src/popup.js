@@ -46,17 +46,20 @@
 					}, 2000);
 				});
 			//Sending message to background to get a files
+			chrome.runtime.onMessage.addListener(
+				function(request, sender, response) {
+					(request.message === "done" && request.to === "popup")
+						? requestFeedback(warning, button)
+						: response({message: "dead-end"})
+				});
 			chrome.runtime.sendMessage({message: "allFiles request"},
 				function (response) {
 					if (response.message === "All files sent") {
 						resourcesList = response.files;
 						appendOptionsList()
 					}
+					else console.log(response);
 				});
-			chrome.runtime.onMessage.addListener(
-				response => (response.message === "done" && response.to === "popup")
-					? requestFeedback(warning, button)
-					: console.log(response));
 		});
 //Set selector options
 	function appendOptionsList() {
@@ -71,9 +74,10 @@
                 resourceOption.value = index.toString();
 				resourceOption.title = resource.name;
 				resourceOption.innerHTML = resource.name;
-                resourceOption.style = (/([\u0590-\u05FF\uFB2A-\uFB4E])+/.test(resource.name)) ?
-                    "direction: rtl; text-align: right;" :
-                    "direction: ltr; text-align: left;";
+                resourceOption.setAttribute("style",
+					/([\u0590-\u05FF\uFB2A-\uFB4E])+/.test(resource.name)
+					? "direction: rtl; text-align: right;"
+					: "direction: ltr; text-align: left;");
 				resourceSelector.appendChild(resourceOption);
 			});
 		} catch (error) {

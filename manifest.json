@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Moodle Downloader",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "A chrome extension for downloading Moodle resources",
   "icons": {
     "16": "assets/icon16.png",
@@ -24,7 +24,8 @@
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "permissions": [
     "activeTab",
-    "downloads"
+    "downloads",
+	"tabs"
   ],
   "background": {
     "scripts": ["src/background.js"],
