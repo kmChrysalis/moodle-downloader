@@ -43,7 +43,9 @@ function setButtons(sections) {
 			li.appendChild(button)
 			sectionEl.insertBefore(li, sectionEl.firstChild);
 		}
-		else if (sectionEl.className !== 'summary') sectionEl.parentNode.parentNode.parentNode.remove();
+		else if (sectionEl.className !== 'summary') {
+			sectionEl.parentNode.parentNode.parentNode.remove();
+		}
 	});
 }
 
@@ -71,18 +73,13 @@ function getFiles() {
 			message: "All Files",
 			files: allFiles
 		},
-		function (response) {
-			console.log(response);
-		});
-	console.log(allFiles)
+		(response) => console.log(response));
 	setButtons(allFiles.map(file => file.section));
 	return allFiles;
 }
 
 function getDownloadOptions(sesskey, url) {
-	if (!url.includes("folder")) {
-		return {url: url + "&redirect=1"};
-	}
+	if (!url.includes("folder")) return {url: url + "&redirect=1"};
 	const urlObj = new URL(url);
 	const id = urlObj.searchParams.get("id");
 	const downloadUrl =
@@ -108,9 +105,8 @@ function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
 		.map(content => {
 			const sectionEl = content.querySelector(".sectionname") ||
 				content.querySelector(".summary")
-			const sectionName = sectionEl && sectionEl.textContent.length > 0  && sectionEl.textContent.length < 50 ?
+			const sectionName = sectionEl && sectionEl.textContent.length > 0  && sectionEl.textContent.length < 55 ?
 				cleanupSection(sectionEl.textContent.trim()) : "General";
-			console.log(content)
 			if (!sectionEl) return;
 			sectionsMap.set(sectionName, sectionEl);
 			return Array.from(content.getElementsByClassName("activity"))
@@ -118,7 +114,7 @@ function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
 					instanceName: activity.getElementsByClassName("instancename")[0],
 					anchorTag: activity.getElementsByTagName("a")[0]
 				}))
-				.filter(({instanceName, anchorTag}) => instanceName !== undefined && anchorTag !== undefined)
+				.filter(({instanceName, anchorTag}) => instanceName && anchorTag)
 				.map(({instanceName, anchorTag}) => ({
 					course: courseName,
 					name: instanceName.firstChild.textContent.trim(),

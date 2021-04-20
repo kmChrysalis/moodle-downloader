@@ -44,7 +44,7 @@
 				downloadFromURL(resourcesArr, newOptions, index, receiver);
 			}
 		}
-		else console.log("resourcesArr length = ", resourcesArr.length, `resourcesArr[${index}] = `, resourcesArr[index]);
+		// else console.log("resourcesArr length = ", resourcesArr.length, `resourcesArr[${index}] = `, resourcesArr[index]);
 	}
 
 	function downloadFromURL(resourcesArr, newOptions, index, receiver) {
