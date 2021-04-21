@@ -65,7 +65,7 @@ function getFiles() {
 	const tableBody = document.querySelector(
 		"div[role='main'] > table.generaltable.mod_index > tbody"
 	);
-	const SUPPORTED_FILES = new Set(["File", "Folder", "URL", "Page", "קובץ", "תצוגת תיקיית קבצים", "קישור לאתר אינטרנט", "דף תוכן מעוצב"]);
+	const SUPPORTED_FILES = new RegExp("File|Folder|URL|Page|קובץ|תצוגת תיקיית קבצים|קישור לאתר אינטרנט|דף תוכן מעוצב", 'g');
 	const allFiles = tableBody === null
 		? getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName).filter(x => x)
 		: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES, courseName).filter(x => x);
@@ -122,7 +122,8 @@ function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
 					type: instanceName.lastChild.textContent.trim(),
 					section: sectionName
 				}))
-				.filter(activity => SUPPORTED_FILES.has(activity.type));
+				.filter(activity => activity.type.match(SUPPORTED_FILES))
+				// .forEach(item => console.log(item));
 		})
 		.reduce((x, y) => x.concat(y), []);
 }
@@ -147,7 +148,7 @@ function getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES, courseName)
 				"";
 			return resource;
 		})
-		.filter(resource => SUPPORTED_FILES.has(resource.type));
+		.filter(resource => resource.type.match(SUPPORTED_FILES));
 }
 
 function cleanupSection(name) {
