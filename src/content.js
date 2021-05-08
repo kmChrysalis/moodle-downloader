@@ -44,6 +44,7 @@ function setButtons(sections) {
 			sectionEl.insertBefore(li, sectionEl.firstChild);
 		}
 		else if (sectionEl.className !== 'summary') {
+			// console.log(sectionEl)
 			sectionEl.parentNode.parentNode.parentNode.remove();
 		}
 	});
@@ -65,7 +66,7 @@ function getFiles() {
 	const tableBody = document.querySelector(
 		"div[role='main'] > table.generaltable.mod_index > tbody"
 	);
-	const SUPPORTED_FILES = new RegExp("File|Folder|URL|Page|קובץ|תצוגת תיקיית קבצים|קישור לאתר אינטרנט|דף תוכן מעוצב", 'g');
+	const SUPPORTED_FILES = new RegExp("File|Assignment|Folder|URL|Page|Forum|פורום|קובץ|קבצים|קישור|דף|מטלה", 'g');
 	const allFiles = tableBody === null
 		? getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName).filter(x => x)
 		: getFilesUnderResources(sesskey, tableBody, SUPPORTED_FILES, courseName).filter(x => x);
@@ -107,7 +108,7 @@ function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
 				content.querySelector(".summary")
 			const sectionName = sectionEl && sectionEl.textContent.length > 0  && sectionEl.textContent.length < 55 ?
 				cleanupSection(sectionEl.textContent.trim()) : "General";
-			if (!sectionEl) return;
+			if (!sectionEl) return
 			sectionsMap.set(sectionName, sectionEl);
 			return Array.from(content.getElementsByClassName("activity"))
 				.map(activity => ({
@@ -123,7 +124,7 @@ function getFilesUnderSections(sesskey, SUPPORTED_FILES, courseName) {
 					section: sectionName
 				}))
 				.filter(activity => activity.type.match(SUPPORTED_FILES))
-				// .forEach(item => console.log(item));
+				//.forEach(item => console.log(item));
 		})
 		.reduce((x, y) => x.concat(y), []);
 }
